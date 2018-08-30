@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.Set;
@@ -45,7 +46,7 @@ public class AddressBook {
     /**
      * Version info of the program.
      */
-    private static final String VERSION = "AddessBook Level 1 - Version 1.0";
+    private static final String VERSION = "AddressBook Level 1 - Version 1.0";
 
     /**
      * A decorative prefix added to the beginning of lines printed by AddressBook
@@ -493,14 +494,42 @@ public class AddressBook {
      * @return list of persons in full model with name containing some of the keywords
      */
     private static ArrayList<HashMap<PersonProperty, String>> getPersonsWithNameContainingAnyKeyword(Collection<String> keywords) {
+        keywords = convertToLowercase(keywords);
         final ArrayList<HashMap<PersonProperty, String>> matchedPersons = new ArrayList<>();
         for (HashMap<PersonProperty, String> person : getAllPersonsInAddressBook()) {
-            final Set<String> wordsInName = new HashSet<>(splitByWhitespace(getNameFromPerson(person)));
+            Set<String> wordsInName = new HashSet<>(splitByWhitespace(getNameFromPerson(person)));
+            wordsInName = convertToLowercase(wordsInName);
             if (!Collections.disjoint(wordsInName, keywords)) {
                 matchedPersons.add(person);
             }
         }
         return matchedPersons;
+    }
+
+    private static Collection<String> convertToLowercase(Collection<String> keywords){
+        Set<String> lowercaseKeywords = new HashSet<>();
+
+        Iterator<String> iterator = keywords.iterator();
+
+        while(iterator.hasNext()) {
+            String keyword = iterator.next();
+            lowercaseKeywords.add(keyword.toLowerCase());
+        }
+
+        return lowercaseKeywords;
+    }
+
+    private static Set<String> convertToLowercase(Set<String> keywords){
+        Set<String> lowercaseKeywords = new HashSet<>();
+
+        Iterator<String> iterator = keywords.iterator();
+
+        while(iterator.hasNext()) {
+            String keyword = iterator.next();
+            lowercaseKeywords.add(keyword.toLowerCase());
+        }
+
+        return lowercaseKeywords;
     }
 
     /**
